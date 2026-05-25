@@ -1,0 +1,29 @@
+# Node / Vite
+node_modules/
+dist/
+*.tsbuildinfo
+.vite/
+
+# tsc -b emit byproducts (composite mode requires emit; the .ts is the source of truth)
+vite.config.js
+vite.config.d.ts
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.Python
+
+# Download cache — regenerable via scripts/download_sg_geojson.py.
+# Curated artifacts live in data/ and ARE checked in.
+output/
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp

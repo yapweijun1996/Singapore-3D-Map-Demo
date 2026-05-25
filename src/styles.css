@@ -1,0 +1,646 @@
+/* =============================================================
+ * Theme tokens — oklch source of truth.
+ * Three.js mirrors these values in src/lib/theme.ts; if you change
+ * one place, change the other.
+ * ============================================================= */
+
+:root {
+  /* shape / motion tokens (theme-independent) */
+  --blur: blur(40px) saturate(180%);
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --serif: 'Instrument Serif', 'Times New Roman', serif;
+  --sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  --mono: 'Geist Mono', 'SF Mono', 'JetBrains Mono', monospace;
+
+  /* dark tokens (default) — matches THEME.dark.sceneBg in src/lib/theme.ts */
+  --bg: oklch(0.085 0.015 230);
+
+  --text-1: oklch(0.98 0 0 / 94%);
+  --text-2: oklch(0.98 0 0 / 55%);
+  --text-3: oklch(0.98 0 0 / 32%);
+  --text-4: oklch(0.98 0 0 / 18%);
+
+  --glass: oklch(1 0 0 / 2.8%);
+  --glass-hover: oklch(1 0 0 / 5.5%);
+  --glass-active: oklch(1 0 0 / 9.5%);
+
+  --border: oklch(1 0 0 / 7%);
+  --border-strong: oklch(1 0 0 / 14%);
+
+  --vignette-edge: oklch(0 0 0 / 40%);
+
+  /* accent for the "Demo data" pill — amber that works on dark */
+  --warn-fg: oklch(0.85 0.12 75);
+  --warn-bg: oklch(0.85 0.12 75 / 10%);
+  --warn-border: oklch(0.85 0.12 75 / 30%);
+
+  --shadow-card: 0 24px 60px oklch(0 0 0 / 50%);
+  --shadow-pill: 0 8px 32px oklch(0 0 0 / 40%);
+}
+
+/* auto: follow system when no explicit override */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --bg: oklch(0.965 0.012 85);
+
+    --text-1: oklch(0.18 0.01 250 / 96%);
+    --text-2: oklch(0.18 0.01 250 / 65%);
+    --text-3: oklch(0.18 0.01 250 / 42%);
+    --text-4: oklch(0.18 0.01 250 / 22%);
+
+    --glass: oklch(0 0 0 / 3.5%);
+    --glass-hover: oklch(0 0 0 / 6.5%);
+    --glass-active: oklch(0 0 0 / 11%);
+
+    --border: oklch(0 0 0 / 9%);
+    --border-strong: oklch(0 0 0 / 16%);
+
+    --vignette-edge: oklch(0 0 0 / 18%);
+
+    --warn-fg: oklch(0.45 0.16 50);
+    --warn-bg: oklch(0.85 0.14 75 / 18%);
+    --warn-border: oklch(0.55 0.14 60 / 35%);
+
+    --shadow-card: 0 24px 60px oklch(0 0 0 / 18%);
+    --shadow-pill: 0 6px 24px oklch(0 0 0 / 14%);
+  }
+}
+
+/* explicit override always wins */
+:root[data-theme='light'] {
+  --bg: oklch(0.965 0.012 85);
+
+  --text-1: oklch(0.18 0.01 250 / 96%);
+  --text-2: oklch(0.18 0.01 250 / 65%);
+  --text-3: oklch(0.18 0.01 250 / 42%);
+  --text-4: oklch(0.18 0.01 250 / 22%);
+
+  --glass: oklch(0 0 0 / 3.5%);
+  --glass-hover: oklch(0 0 0 / 6.5%);
+  --glass-active: oklch(0 0 0 / 11%);
+
+  --border: oklch(0 0 0 / 9%);
+  --border-strong: oklch(0 0 0 / 16%);
+
+  --vignette-edge: oklch(0 0 0 / 18%);
+
+  --warn-fg: oklch(0.45 0.16 50);
+  --warn-bg: oklch(0.85 0.14 75 / 18%);
+  --warn-border: oklch(0.55 0.14 60 / 35%);
+
+  --shadow-card: 0 24px 60px oklch(0 0 0 / 18%);
+  --shadow-pill: 0 6px 24px oklch(0 0 0 / 14%);
+}
+
+/* explicit dark override (redundant w/ defaults, but allows toggle from light system) */
+:root[data-theme='dark'] {
+  --bg: oklch(0.085 0.015 230);
+  --text-1: oklch(0.98 0 0 / 94%);
+  --text-2: oklch(0.98 0 0 / 55%);
+  --text-3: oklch(0.98 0 0 / 32%);
+  --text-4: oklch(0.98 0 0 / 18%);
+  --glass: oklch(1 0 0 / 2.8%);
+  --glass-hover: oklch(1 0 0 / 5.5%);
+  --glass-active: oklch(1 0 0 / 9.5%);
+  --border: oklch(1 0 0 / 7%);
+  --border-strong: oklch(1 0 0 / 14%);
+  --vignette-edge: oklch(0 0 0 / 40%);
+  --warn-fg: oklch(0.85 0.12 75);
+  --warn-bg: oklch(0.85 0.12 75 / 10%);
+  --warn-border: oklch(0.85 0.12 75 / 30%);
+  --shadow-card: 0 24px 60px oklch(0 0 0 / 50%);
+  --shadow-pill: 0 8px 32px oklch(0 0 0 / 40%);
+}
+
+/* ============================================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: var(--sans);
+  transition: background 320ms var(--ease), color 320ms var(--ease);
+}
+
+.app {
+  position: absolute;
+  inset: 0;
+}
+
+.canvas-wrap {
+  position: absolute;
+  inset: 0;
+}
+
+.canvas-wrap canvas {
+  display: block;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  background: radial-gradient(ellipse at center, transparent 40%, var(--vignette-edge) 100%);
+}
+
+/* === Hero === */
+.hero {
+  position: absolute;
+  top: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  animation: heroIn 1.2s var(--ease-out) 0.3s forwards;
+}
+.hero .title {
+  font-family: var(--serif);
+  font-size: 72px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-1);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.hero .meta {
+  margin-top: 16px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.hero .meta .dot {
+  color: var(--text-4);
+  margin: 0 8px;
+}
+
+@keyframes heroIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* === Controls (bottom) === */
+.controls {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  gap: 2px;
+  padding: 5px;
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-pill);
+  opacity: 0;
+  animation: controlsIn 1s var(--ease-out) 1.6s forwards;
+}
+
+@keyframes controlsIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.controls button {
+  appearance: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+  letter-spacing: 0.02em;
+  padding: 9px 18px;
+  border-radius: 999px;
+  transition: color 280ms var(--ease), background 280ms var(--ease);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.controls button:hover {
+  color: var(--text-1);
+  background: var(--glass-hover);
+}
+.controls button.active {
+  color: var(--text-1);
+  background: var(--glass-active);
+}
+.controls button .indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-4);
+  transition: background 280ms var(--ease), box-shadow 280ms var(--ease);
+}
+.controls button.active .indicator {
+  background: var(--text-1);
+  box-shadow: 0 0 8px var(--text-2);
+}
+
+/* === Layer switcher (top-right pill group) === */
+.layer-switcher {
+  position: absolute;
+  top: 56px;
+  right: 48px;
+  z-index: 50;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-pill);
+  opacity: 0;
+  animation: heroIn 1s var(--ease-out) 1s forwards;
+}
+.layer-switcher button {
+  appearance: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-2);
+  letter-spacing: 0.04em;
+  padding: 8px 14px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  transition: color 240ms var(--ease), background 240ms var(--ease);
+}
+.layer-switcher button:hover {
+  color: var(--text-1);
+  background: var(--glass-hover);
+}
+.layer-switcher button.active {
+  color: var(--text-1);
+  background: var(--glass-active);
+}
+.layer-switcher .count {
+  margin-left: 6px;
+  color: var(--text-3);
+  font-family: var(--mono);
+  font-size: 10px;
+}
+.layer-switcher button.active .count {
+  color: var(--text-2);
+}
+
+/* === FPS badge (top-right, above layer switcher) === */
+.fps-badge {
+  position: absolute;
+  top: 16px;
+  right: 48px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-pill);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  color: var(--text-2);
+  opacity: 0;
+  animation: fadeIn 1s var(--ease-out) 2.2s forwards;
+  pointer-events: none;
+  user-select: none;
+}
+.fps-badge .fps-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 6px currentColor;
+}
+.fps-badge .fps-num {
+  font-weight: 500;
+  color: var(--text-1);
+  font-variant-numeric: tabular-nums;
+  min-width: 2ch;
+  text-align: right;
+}
+.fps-badge .fps-unit {
+  color: var(--text-3);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.fps-badge.fps-good { color: oklch(0.78 0.18 145); }
+.fps-badge.fps-ok   { color: oklch(0.78 0.16 75); }
+.fps-badge.fps-bad  { color: oklch(0.65 0.22 25); }
+
+/* === Theme toggle (top-left) === */
+.theme-toggle {
+  position: absolute;
+  top: 56px;
+  left: 48px;
+  z-index: 50;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-pill);
+  color: var(--text-2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: heroIn 1s var(--ease-out) 1s forwards;
+  transition: color 240ms var(--ease), background 240ms var(--ease);
+}
+.theme-toggle:hover {
+  color: var(--text-1);
+  background: var(--glass-hover);
+}
+.theme-toggle svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* === Hint (bottom-left) === */
+.hint {
+  position: absolute;
+  bottom: 56px;
+  left: 48px;
+  z-index: 50;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  line-height: 2;
+  opacity: 0;
+  animation: fadeIn 1s var(--ease-out) 2s forwards;
+}
+.hint .key {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-2);
+  letter-spacing: 0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  margin-right: 6px;
+  text-transform: none;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* === Counter (bottom-right) === */
+.counter {
+  position: absolute;
+  bottom: 56px;
+  right: 48px;
+  z-index: 50;
+  text-align: right;
+  font-family: var(--sans);
+  opacity: 0;
+  animation: fadeIn 1s var(--ease-out) 2s forwards;
+}
+.counter .num {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 38px;
+  line-height: 1;
+  color: var(--text-1);
+}
+.counter .label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-top: 8px;
+}
+
+/* === Info card === */
+.card {
+  position: absolute;
+  top: 50%;
+  right: 48px;
+  transform: translateY(-50%) translateX(40px);
+  z-index: 60;
+  width: 340px;
+  padding: 36px 32px;
+  border-radius: 24px;
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 480ms var(--ease-out),
+    transform 560ms var(--ease-out);
+}
+.card.show {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+  pointer-events: auto;
+}
+.card .close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-3);
+  background: transparent;
+  border: none;
+  transition: color 240ms var(--ease), background 240ms var(--ease);
+}
+.card .close:hover {
+  color: var(--text-1);
+  background: var(--glass-hover);
+}
+.card .close svg {
+  width: 14px;
+  height: 14px;
+}
+.card .eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card .demo-pill {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--warn-fg);
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--warn-bg);
+  border: 1px solid var(--warn-border);
+}
+.card .name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 1.05;
+  color: var(--text-1);
+  margin-bottom: 28px;
+  letter-spacing: -0.02em;
+}
+.card .stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+}
+.card .stat:last-child {
+  border-bottom: 1px solid var(--border);
+}
+.card .stat-label {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.card .stat-value {
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--text-1);
+  letter-spacing: -0.01em;
+}
+.card .stat-value .unit {
+  color: var(--text-3);
+  margin-left: 4px;
+  font-size: 12px;
+}
+
+/* === Map tags (cartographic pin style) =======================================
+ * Vertical stack: name pill → stem → dot. The dot sits at the area centroid;
+ * the stem lifts the name pill ~14px clear of the map surface so it doesn't
+ * read as "stuck on" geometry. transform: translate(-50%, -100%) anchors the
+ * dot (bottom-center of the stack) exactly at the 3D position. */
+.map-tag {
+  pointer-events: none;
+  font-family: var(--sans);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  white-space: nowrap;
+  transform: translate(-50%, -100%);
+  user-select: none;
+}
+
+.map-tag .tag-name {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: capitalize;
+  color: var(--text-1);
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 10px oklch(0 0 0 / 25%);
+}
+
+.map-tag .tag-stem {
+  width: 1px;
+  height: 14px;
+  background: linear-gradient(to bottom, var(--text-3), transparent);
+}
+
+.map-tag .tag-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-1);
+  border: 1px solid var(--bg);
+  box-shadow: 0 0 8px var(--text-2);
+  margin-top: -1px;
+}
+
+/* === Loading === */
+.loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  text-align: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 32px;
+  color: var(--text-2);
+  letter-spacing: -0.01em;
+}
+.loading.error {
+  color: oklch(0.65 0.18 25);
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
