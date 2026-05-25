@@ -2,27 +2,26 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { ThreeTokens } from '../lib/theme';
-
-const COUNT = 3;
-const BASE_RADIUS = 20;
-const SPEED = 0.18;
+import { CONFIG } from '../config';
 
 interface Props {
   visible: boolean;
   theme: ThreeTokens;
+  reducedMotion: boolean;
 }
 
-export function RippleRings({ visible, theme }: Props) {
+export function RippleRings({ visible, theme, reducedMotion }: Props) {
   const group = useRef<THREE.Group>(null);
   const meshes = useRef<THREE.Mesh[]>([]);
+  const { count, baseRadius, thickness, speed, maxScale, segments } = CONFIG.ripple;
 
   useFrame((state) => {
-    if (!visible || !group.current) return;
+    if (reducedMotion || !visible || !group.current) return;
     const t = state.clock.elapsedTime;
     for (let i = 0; i < meshes.current.length; i++) {
       const m = meshes.current[i];
-      const phase = (t * SPEED + i / COUNT) % 1;
-      const scale = 1 + phase * 5;
+      const phase = (t * speed + i / count) % 1;
+      const scale = 1 + phase * (maxScale - 1);
       m.scale.set(scale, scale, 1);
       const mat = m.material as THREE.MeshBasicMaterial;
       mat.opacity = theme.rippleOpacity * (1 - phase);
@@ -31,14 +30,14 @@ export function RippleRings({ visible, theme }: Props) {
 
   return (
     <group ref={group} rotation-x={-Math.PI / 2} visible={visible}>
-      {Array.from({ length: COUNT }).map((_, i) => (
+      {Array.from({ length: count }).map((_, i) => (
         <mesh
           key={i}
           ref={(el) => {
             if (el) meshes.current[i] = el;
           }}
         >
-          <ringGeometry args={[BASE_RADIUS, BASE_RADIUS + 0.12, 96]} />
+          <ringGeometry args={[baseRadius, baseRadius + thickness, segments]} />
           <meshBasicMaterial
             color={theme.ripple}
             side={THREE.DoubleSide}

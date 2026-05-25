@@ -14,7 +14,7 @@ A single `THREE.Raycaster` + `THREE.Vector2` is reused. On every `mousemove` and
 1. `mouse.x / mouse.y` are computed in NDC from the canvas bounding rect.
 2. `raycaster.setFromCamera(mouse, camera)`.
 3. Intersect against **all extruded top meshes** collected from `modelByName` (one mesh per area, not the whole scene).
-4. Walk up `hit.object.parent` chain until a node with `userData.metrics` is found — that's the *model* (area-level container).
+4. Walk up `hit.object.parent` chain until a node with `userData.metrics` is found — that's the _model_ (area-level container).
 
 ### Hover
 
@@ -32,10 +32,10 @@ click ─▶ pick(e)
 
 ## Highlight
 
-`highlightModel(model)` mutates the area's *own* `topMat`:
+`highlightModel(model)` mutates the area's _own_ `topMat`:
 
 ```js
-mat.userData.origColor    = mat.color.getHex();
+mat.userData.origColor = mat.color.getHex();
 mat.userData.origEmissive = mat.emissive.getHex();
 mat.emissive.set(0xffffff);
 // (color tweak applied here)

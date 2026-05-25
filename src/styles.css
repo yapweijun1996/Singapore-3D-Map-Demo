@@ -36,6 +36,8 @@
   --warn-bg: oklch(0.85 0.12 75 / 10%);
   --warn-border: oklch(0.85 0.12 75 / 30%);
 
+  --accent: oklch(0.78 0.16 70);
+
   --shadow-card: 0 24px 60px oklch(0 0 0 / 50%);
   --shadow-pill: 0 8px 32px oklch(0 0 0 / 40%);
 }
@@ -110,6 +112,8 @@
   --warn-fg: oklch(0.85 0.12 75);
   --warn-bg: oklch(0.85 0.12 75 / 10%);
   --warn-border: oklch(0.85 0.12 75 / 30%);
+
+  --accent: oklch(0.78 0.16 70);
   --shadow-card: 0 24px 60px oklch(0 0 0 / 50%);
   --shadow-pill: 0 8px 32px oklch(0 0 0 / 40%);
 }
@@ -132,7 +136,22 @@ body,
   background: var(--bg);
   color: var(--text-1);
   font-family: var(--sans);
-  transition: background 320ms var(--ease), color 320ms var(--ease);
+  /* Short transition keeps the body bg in sync with the canvas, which
+   * re-renders the scene's clear color instantly on theme switch. */
+  transition:
+    background 160ms var(--ease),
+    color 160ms var(--ease);
+}
+
+/* Keyboard focus — visible ring for Tab navigation. */
+:focus-visible {
+  outline: 2px solid var(--accent, oklch(0.7 0.18 70));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+/* Suppress the ring on mouse / touch interactions (matches modern browser UX). */
+:focus:not(:focus-visible) {
+  outline: none;
 }
 
 .app {
@@ -143,10 +162,50 @@ body,
 .canvas-wrap {
   position: absolute;
   inset: 0;
+  opacity: 1;
+  transition: opacity 200ms var(--ease-out);
+}
+
+.canvas-wrap.fading {
+  opacity: 0;
 }
 
 .canvas-wrap canvas {
   display: block;
+}
+
+/* WebGL context loss prompt */
+.context-lost {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.context-lost .reload-btn {
+  appearance: none;
+  background: var(--glass-active);
+  border: 1px solid var(--border-strong);
+  color: var(--text-1);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 240ms var(--ease),
+    color 240ms var(--ease);
+}
+.context-lost .reload-btn:hover {
+  background: var(--text-2);
+  color: var(--bg);
 }
 
 .vignette {
@@ -171,7 +230,8 @@ body,
 }
 .hero .title {
   font-family: var(--serif);
-  font-size: 72px;
+  /* Fluid scale: 44px floor for tiny screens, scales with viewport up to 72px. */
+  font-size: clamp(44px, 5vw, 72px);
   font-weight: 400;
   font-style: italic;
   color: var(--text-1);
@@ -190,6 +250,10 @@ body,
 .hero .meta .dot {
   color: var(--text-4);
   margin: 0 8px;
+}
+.hero .meta .meta-warn {
+  color: var(--warn-fg);
+  letter-spacing: 0.18em;
 }
 
 @keyframes heroIn {
@@ -246,7 +310,9 @@ body,
   letter-spacing: 0.02em;
   padding: 9px 18px;
   border-radius: 999px;
-  transition: color 280ms var(--ease), background 280ms var(--ease);
+  transition:
+    color 280ms var(--ease),
+    background 280ms var(--ease);
   display: flex;
   align-items: center;
   gap: 7px;
@@ -264,7 +330,9 @@ body,
   height: 6px;
   border-radius: 50%;
   background: var(--text-4);
-  transition: background 280ms var(--ease), box-shadow 280ms var(--ease);
+  transition:
+    background 280ms var(--ease),
+    box-shadow 280ms var(--ease);
 }
 .controls button.active .indicator {
   background: var(--text-1);
@@ -302,7 +370,9 @@ body,
   padding: 8px 14px;
   border-radius: 999px;
   text-transform: uppercase;
-  transition: color 240ms var(--ease), background 240ms var(--ease);
+  transition:
+    color 240ms var(--ease),
+    background 240ms var(--ease);
 }
 .layer-switcher button:hover {
   color: var(--text-1);
@@ -322,11 +392,13 @@ body,
   color: var(--text-2);
 }
 
-/* === FPS badge (top-right, above layer switcher) === */
+/* === FPS badge (top-left, beside theme toggle) ===
+ * Grouped with the theme toggle as "session settings" — keeps the right
+ * corner clear for LayerSwitcher + InfoCard. */
 .fps-badge {
   position: absolute;
-  top: 16px;
-  right: 48px;
+  top: 64px;
+  left: 100px;
   z-index: 50;
   display: flex;
   align-items: center;
@@ -367,9 +439,15 @@ body,
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.fps-badge.fps-good { color: oklch(0.78 0.18 145); }
-.fps-badge.fps-ok   { color: oklch(0.78 0.16 75); }
-.fps-badge.fps-bad  { color: oklch(0.65 0.22 25); }
+.fps-badge.fps-good {
+  color: oklch(0.78 0.18 145);
+}
+.fps-badge.fps-ok {
+  color: oklch(0.78 0.16 75);
+}
+.fps-badge.fps-bad {
+  color: oklch(0.65 0.22 25);
+}
 
 /* === Theme toggle (top-left) === */
 .theme-toggle {
@@ -392,7 +470,9 @@ body,
   justify-content: center;
   opacity: 0;
   animation: heroIn 1s var(--ease-out) 1s forwards;
-  transition: color 240ms var(--ease), background 240ms var(--ease);
+  transition:
+    color 240ms var(--ease),
+    background 240ms var(--ease);
 }
 .theme-toggle:hover {
   color: var(--text-1);
@@ -401,6 +481,38 @@ body,
 .theme-toggle svg {
   width: 16px;
   height: 16px;
+}
+
+/* === Attribution (bottom-center, small) === */
+.attribution {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-4);
+  opacity: 0;
+  animation: fadeIn 1s var(--ease-out) 2.4s forwards;
+  pointer-events: auto;
+}
+.attribution .attribution-sep {
+  color: var(--text-4);
+}
+.attribution .attribution-link {
+  color: var(--text-3);
+  text-decoration: none;
+  transition: color 200ms var(--ease);
+  pointer-events: auto;
+}
+.attribution .attribution-link:hover {
+  color: var(--text-1);
 }
 
 /* === Hint (bottom-left) === */
@@ -430,6 +542,23 @@ body,
   border: 1px solid var(--border);
   margin-right: 6px;
   text-transform: none;
+}
+
+/* Show pointer copy on hover-capable devices, touch copy on touch-only. */
+.hint .hint-touch {
+  display: none;
+}
+.hint .hint-sep {
+  margin: 0 12px;
+  color: var(--text-4);
+}
+@media (hover: none) {
+  .hint .hint-pointer {
+    display: none;
+  }
+  .hint .hint-touch {
+    display: block;
+  }
 }
 
 @keyframes fadeIn {
@@ -493,10 +622,11 @@ body,
 }
 .card .close {
   position: absolute;
-  top: 18px;
-  right: 18px;
-  width: 28px;
-  height: 28px;
+  /* 44 × 44 hit area for WCAG 2.5.5 — visually centered icon stays small. */
+  top: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -505,7 +635,9 @@ body,
   color: var(--text-3);
   background: transparent;
   border: none;
-  transition: color 240ms var(--ease), background 240ms var(--ease);
+  transition:
+    color 240ms var(--ease),
+    background 240ms var(--ease);
 }
 .card .close:hover {
   color: var(--text-1);
@@ -573,6 +705,77 @@ body,
   color: var(--text-3);
   margin-left: 4px;
   font-size: 12px;
+}
+
+/* === Selection breadcrumb ===
+ * Shows when the info card is closed but a selection persists. Lives just
+ * above the controls bar (bottom-center). Click body → reopen card; click
+ * ✕ → fully deselect. */
+.breadcrumb {
+  position: absolute;
+  bottom: 110px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 55;
+  display: flex;
+  align-items: stretch;
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-pill);
+  overflow: hidden;
+  opacity: 0;
+  animation: fadeIn 360ms var(--ease-out) forwards;
+}
+.breadcrumb .breadcrumb-body,
+.breadcrumb .breadcrumb-clear {
+  appearance: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--sans);
+  display: flex;
+  align-items: center;
+  transition:
+    color 240ms var(--ease),
+    background 240ms var(--ease);
+  color: var(--text-2);
+}
+.breadcrumb .breadcrumb-body {
+  padding: 8px 16px 8px 18px;
+  gap: 10px;
+}
+.breadcrumb .breadcrumb-body:hover {
+  color: var(--text-1);
+  background: var(--glass-hover);
+}
+.breadcrumb .breadcrumb-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.breadcrumb .breadcrumb-name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--text-1);
+  letter-spacing: -0.01em;
+}
+.breadcrumb .breadcrumb-clear {
+  padding: 0 14px;
+  border-left: 1px solid var(--border);
+  color: var(--text-3);
+}
+.breadcrumb .breadcrumb-clear:hover {
+  color: var(--text-1);
+  background: var(--glass-hover);
+}
+.breadcrumb .breadcrumb-clear svg {
+  width: 12px;
+  height: 12px;
 }
 
 /* === Map tags (cartographic pin style) =======================================
@@ -643,4 +846,84 @@ body,
   font-size: 14px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+/* =============================================================
+ * Responsive — clamp insets and shrink hero on narrow viewports.
+ * Default desktop styles above stay authoritative; these tighten.
+ * ============================================================= */
+@media (max-width: 768px) {
+  .hero {
+    top: 32px;
+  }
+  .layer-switcher {
+    top: 32px;
+    right: 16px;
+  }
+  .theme-toggle {
+    top: 32px;
+    left: 16px;
+  }
+  .fps-badge {
+    top: 40px;
+    left: 72px;
+  }
+  .hint,
+  .counter {
+    bottom: 110px;
+  }
+  .hint {
+    left: 16px;
+  }
+  .counter {
+    right: 16px;
+  }
+  .controls {
+    bottom: 24px;
+  }
+  .card {
+    right: 16px;
+    width: min(340px, calc(100vw - 32px));
+    padding: 28px 24px;
+  }
+  .breadcrumb {
+    bottom: 84px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero .meta {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+  .layer-switcher button {
+    padding: 7px 10px;
+    font-size: 10px;
+  }
+  /* Hide the verbose hint on tiny screens — buttons + tags carry the load. */
+  .hint {
+    display: none;
+  }
+  .counter .num {
+    font-size: 28px;
+  }
+  .counter .label {
+    font-size: 9px;
+  }
+  .controls {
+    flex-wrap: wrap;
+    max-width: calc(100vw - 24px);
+    justify-content: center;
+  }
+  .controls button {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+  .controls .controls-divider {
+    display: none;
+  }
+  .card {
+    width: calc(100vw - 24px);
+    right: 12px;
+  }
 }

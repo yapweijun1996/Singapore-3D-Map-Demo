@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import * as THREE from 'three';
 import type { ThreeTokens } from '../lib/theme';
+import { CONFIG } from '../config';
 
 interface Props {
   theme: ThreeTokens;
@@ -36,7 +37,7 @@ export function Floor({ theme }: Props) {
 
   return (
     <mesh rotation-x={-Math.PI / 2} position-y={-0.02}>
-      <circleGeometry args={[280, 64]} />
+      <circleGeometry args={[CONFIG.floor.radius, CONFIG.floor.segments]} />
       <primitive object={material} attach="material" />
     </mesh>
   );

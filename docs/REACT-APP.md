@@ -8,13 +8,13 @@ The live demo is a **React 18 + Vite 5 + TypeScript** app using **react-three-fi
 
 All state lives in `src/App.tsx`:
 
-| State            | Type                      | Owner / setter                            |
-| ---------------- | ------------------------- | ----------------------------------------- |
-| `layer`          | `'regions' \| 'planning-areas' \| 'subzones'` | `<LayerSwitcher>` |
-| `models`         | `AreaModel[]`             | `useEffect([layer])` calls `loadLayer()`   |
-| `loading`/`error`| boolean / string          | same effect                                |
-| `selectedName`   | `string \| null`          | `<PlanningArea onClick>` + `Escape` + `onPointerMissed` |
-| `toggles`        | `{ pillars, tags, ripple, particles }` | `<HUD>` button bar             |
+| State             | Type                                          | Owner / setter                                          |
+| ----------------- | --------------------------------------------- | ------------------------------------------------------- |
+| `layer`           | `'regions' \| 'planning-areas' \| 'subzones'` | `<LayerSwitcher>`                                       |
+| `models`          | `AreaModel[]`                                 | `useEffect([layer])` calls `loadLayer()`                |
+| `loading`/`error` | boolean / string                              | same effect                                             |
+| `selectedName`    | `string \| null`                              | `<PlanningArea onClick>` + `Escape` + `onPointerMissed` |
+| `toggles`         | `{ pillars, tags, ripple, particles }`        | `<HUD>` button bar                                      |
 
 No external state library. Switching `layer` triggers re-fetch and recompute of `models`; everything else is derived. A `cancelled` flag guards against stale responses.
 
@@ -71,17 +71,17 @@ App.tsx — passes models to MapScene; passes selectedModel to InfoCard.
 
 ## Key differences from `sample.html`
 
-| Concern               | sample.html                                      | React app                                                  |
-| --------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
-| Data                  | `INLINE_GEOJSON` const                           | `fetch('data/sg-<layer>.geojson')`                         |
-| Layer switching       | none — single hard-coded dataset                 | live switch between regions / areas / subzones             |
-| Per-area material     | per-area `MeshPhongMaterial` cloned to allow highlight mutation | one `<meshPhongMaterial>` per area, `color`/`emissive` driven by `selected` prop |
-| Picking               | manual `THREE.Raycaster` + `mousemove`/`click` listeners on the canvas, walks `parent` chain to find `userData.metrics` | r3f's built-in `onClick` / `onPointerOver` per mesh        |
-| Tags                  | `THREE.CSS2DRenderer` + global `applyToggles` flipping `.visible` CSS class | drei's `<Html>` per area, conditionally rendered            |
-| Animation loop        | one big `animate()` driving everything           | each visual primitive owns its `useFrame` (Particles, Ripple, Beam halo) |
-| State                 | top-level `let highlighted = null`, `const toggles = {…}` mutables | React `useState` in `App.tsx`                              |
-| Close card on Escape  | not implemented                                  | `useEffect` global keydown                                  |
-| "Demo data" indicator | not surfaced (users could mistake hash for data) | pill in the info card eyebrow                              |
+| Concern               | sample.html                                                                                                             | React app                                                                        |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Data                  | `INLINE_GEOJSON` const                                                                                                  | `fetch('data/sg-<layer>.geojson')`                                               |
+| Layer switching       | none — single hard-coded dataset                                                                                        | live switch between regions / areas / subzones                                   |
+| Per-area material     | per-area `MeshPhongMaterial` cloned to allow highlight mutation                                                         | one `<meshPhongMaterial>` per area, `color`/`emissive` driven by `selected` prop |
+| Picking               | manual `THREE.Raycaster` + `mousemove`/`click` listeners on the canvas, walks `parent` chain to find `userData.metrics` | r3f's built-in `onClick` / `onPointerOver` per mesh                              |
+| Tags                  | `THREE.CSS2DRenderer` + global `applyToggles` flipping `.visible` CSS class                                             | drei's `<Html>` per area, conditionally rendered                                 |
+| Animation loop        | one big `animate()` driving everything                                                                                  | each visual primitive owns its `useFrame` (Particles, Ripple, Beam halo)         |
+| State                 | top-level `let highlighted = null`, `const toggles = {…}` mutables                                                      | React `useState` in `App.tsx`                                                    |
+| Close card on Escape  | not implemented                                                                                                         | `useEffect` global keydown                                                       |
+| "Demo data" indicator | not surfaced (users could mistake hash for data)                                                                        | pill in the info card eyebrow                                                    |
 
 ## Why r3f over imperative Three.js in `useEffect`
 

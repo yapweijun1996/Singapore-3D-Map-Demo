@@ -24,7 +24,7 @@ npm run preview   # serve dist/ locally
 
 ## Deploy to GitHub Pages
 
-1. **Enable Pages from Actions**: repo → Settings → Pages → *Source: GitHub Actions*. One-time UI click.
+1. **Enable Pages from Actions**: repo → Settings → Pages → _Source: GitHub Actions_. One-time UI click.
 2. Push to `main`. The workflow at [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) builds and deploys automatically.
 
 Live URL: `https://<username>.github.io/Singapore-3D-Map-Demo/`
@@ -51,15 +51,15 @@ See [docs/DATA-PIPELINE.md](docs/DATA-PIPELINE.md).
 
 ## Controls
 
-| Input            | Action                          |
-| ---------------- | ------------------------------- |
-| **Drag**         | Orbit the camera                |
-| **Scroll**       | Zoom                            |
-| **Click** a area | Highlight + open info card      |
-| **Escape**       | Close the info card             |
-| **Regions / Areas / Subzones** (top-right) | Switch boundary layer |
-| **Pillars / Tags / Ripple / Atmosphere** (bottom) | Toggle visual layers |
-| **Theme toggle** (top-left)         | Cycle auto (system) → dark → light |
+| Input                                             | Action                             |
+| ------------------------------------------------- | ---------------------------------- |
+| **Drag**                                          | Orbit the camera                   |
+| **Scroll**                                        | Zoom                               |
+| **Click** a area                                  | Highlight + open info card         |
+| **Escape**                                        | Close the info card                |
+| **Regions / Areas / Subzones** (top-right)        | Switch boundary layer              |
+| **Pillars / Tags / Ripple / Atmosphere** (bottom) | Toggle visual layers               |
+| **Theme toggle** (top-left)                       | Cycle auto (system) → dark → light |
 
 ## Repository layout
 

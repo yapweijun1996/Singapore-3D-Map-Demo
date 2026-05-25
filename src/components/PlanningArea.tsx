@@ -3,9 +3,10 @@ import * as THREE from 'three';
 import { Html } from '@react-three/drei';
 import type { AreaModel } from '../lib/geojson';
 import type { ThreeTokens } from '../lib/theme';
+import { CONFIG } from '../config';
 import { Beam } from './Beam';
 
-const EXTRUDE_DEPTH = 1.8;
+const EXTRUDE_DEPTH = CONFIG.extrude.depth;
 
 interface Props {
   model: AreaModel;
@@ -13,7 +14,9 @@ interface Props {
   showTag: boolean;
   showPillar: boolean;
   theme: ThreeTokens;
+  reducedMotion: boolean;
   onClick: (m: AreaModel) => void;
+  onHover: (name: string | null) => void;
 }
 
 export function PlanningArea({
@@ -22,7 +25,9 @@ export function PlanningArea({
   showTag,
   showPillar,
   theme,
+  reducedMotion,
   onClick,
+  onHover,
 }: Props) {
   // Build ONE ExtrudeGeometry per polygon (Polygon or MultiPolygon piece) so
   // that earcut failing on a single degenerate island (e.g. 4-vertex triangle
@@ -96,9 +101,11 @@ export function PlanningArea({
           onPointerOver={(e) => {
             e.stopPropagation();
             document.body.style.cursor = 'pointer';
+            onHover(model.name);
           }}
           onPointerOut={() => {
             document.body.style.cursor = 'default';
+            onHover(null);
           }}
         >
           <meshPhongMaterial
@@ -112,11 +119,7 @@ export function PlanningArea({
       ))}
 
       <lineSegments geometry={lineGeom}>
-        <lineBasicMaterial
-          color={theme.areaLine}
-          transparent
-          opacity={theme.areaLineOpacity}
-        />
+        <lineBasicMaterial color={theme.areaLine} transparent opacity={theme.areaLineOpacity} />
       </lineSegments>
 
       {showPillar && (
@@ -125,13 +128,14 @@ export function PlanningArea({
           value={model.metrics.value}
           index={Math.abs(model.name.charCodeAt(0))}
           theme={theme}
+          reducedMotion={reducedMotion}
         />
       )}
 
       {showTag && (
         <Html
-          position={[cx, EXTRUDE_DEPTH + 0.25, -cy]}
-          distanceFactor={75}
+          position={[cx, EXTRUDE_DEPTH + CONFIG.tag.yOffset, -cy]}
+          distanceFactor={CONFIG.tag.distanceFactor}
           pointerEvents="none"
           zIndexRange={[10, 0]}
         >

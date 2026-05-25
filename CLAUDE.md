@@ -37,18 +37,18 @@ Idempotent — skips datasets whose `*.geojson` and `*.raw.geojson` both already
 
 ### Deploy
 
-Push to `main`. `.github/workflows/deploy.yml` runs `npm ci && npm run build`, uploads `dist/`, and publishes via `actions/deploy-pages@v4`. One-time setup: repo → Settings → Pages → *Source: GitHub Actions*.
+Push to `main`. `.github/workflows/deploy.yml` runs `npm ci && npm run build`, uploads `dist/`, and publishes via `actions/deploy-pages@v4`. One-time setup: repo → Settings → Pages → _Source: GitHub Actions_.
 
 ## Architecture — React app (big picture)
 
 All state is in `src/App.tsx`. There is **no external state library**.
 
-| State          | Source                                                       |
-| -------------- | ------------------------------------------------------------ |
-| `layer`        | `<LayerSwitcher>` — `'regions' \| 'planning-areas' \| 'subzones'` |
-| `models`       | `useEffect([layer])` calls `loadLayer()` from `src/lib/geojson.ts` |
+| State          | Source                                                                   |
+| -------------- | ------------------------------------------------------------------------ |
+| `layer`        | `<LayerSwitcher>` — `'regions' \| 'planning-areas' \| 'subzones'`        |
+| `models`       | `useEffect([layer])` calls `loadLayer()` from `src/lib/geojson.ts`       |
 | `selectedName` | `<PlanningArea onClick>`, Escape key, or `onPointerMissed` on `<Canvas>` |
-| `toggles`      | `<HUD>` toggle buttons — `pillars / tags / ripple / particles` |
+| `toggles`      | `<HUD>` toggle buttons — `pillars / tags / ripple / particles`           |
 
 `AreaModel` is a **plain object** (`name`, `polygons`, `center`, `metrics`) — not an `Object3D` with magic `userData`. The renderer consumes it as props.
 
@@ -67,11 +67,11 @@ All state is in `src/App.tsx`. There is **no external state library**.
 
 Single file, ~180 lines, three logical pieces:
 
-| Function               | Role                                                                                            |
-| ---------------------- | ----------------------------------------------------------------------------------------------- |
-| `download_dataset()`   | Polls data.gov.sg async `poll-download` API, handles PENDING + 429 + retries (exp backoff)      |
-| `simplify_geojson()`   | shapely Douglas-Peucker (`tolerance=0.0003°` ≈ 33 m, `preserve_topology=True`); drops micro-polygons; 5-decimal rounding; whitelists name properties |
-| `main()`               | Orchestrates three datasets; idempotent skip; 5 s inter-dataset pause                           |
+| Function             | Role                                                                                                                                                 |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `download_dataset()` | Polls data.gov.sg async `poll-download` API, handles PENDING + 429 + retries (exp backoff)                                                           |
+| `simplify_geojson()` | shapely Douglas-Peucker (`tolerance=0.0003°` ≈ 33 m, `preserve_topology=True`); drops micro-polygons; 5-decimal rounding; whitelists name properties |
+| `main()`             | Orchestrates three datasets; idempotent skip; 5 s inter-dataset pause                                                                                |
 
 Dataset IDs are pinned to URA Master Plan 2019 — a future vintage means new IDs (update `DATASETS` dict). Known rough edges catalogued in `task.md` under "Data tooling" (D1–D8).
 

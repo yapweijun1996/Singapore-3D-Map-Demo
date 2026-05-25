@@ -1,13 +1,32 @@
-// DEMO ONLY: these numbers are deterministic hashes of the area name,
-// not real data. Replace with a real metric source for production.
+/**
+ * DEMO-ONLY synthetic metrics derived from area names.
+ *
+ * The four numbers shown in the info card are NOT real data — they are
+ * deterministic hashes of the area name, kept so the visualization has
+ * something plausible to display. Replace via task T6 (real metric source).
+ *
+ * The `<InfoCard>` surfaces a "Demo data" pill so this caveat is visible
+ * to users; do not remove that pill until real data lands.
+ */
 
+import { CONFIG } from '../config';
+
+/** Synthetic per-area metrics. All values are placeholders. */
 export interface Metrics {
-  value: number;     // "visitor flow"   100..999
-  capacity: number;  // capacity         1000..3999
-  traffic: number;   // traffic index    60..94
-  trend: number;     // hot trend        70..99
+  /** "Visitor flow" — drives beam height. Range 100..999. */
+  value: number;
+  /** Capacity headline number. Range 1000..3999. */
+  capacity: number;
+  /** Traffic index in %. Range 60..94. */
+  traffic: number;
+  /** "Hot trend" indicator in %. Range 70..99. */
+  trend: number;
 }
 
+/**
+ * Deterministic 32-bit string hash (djb2-ish, no UTF-16 handling).
+ * Used purely for placeholder metric generation.
+ */
 export function hashStr(s: string): number {
   let h = 0;
   for (let i = 0; i < s.length; i++) {
@@ -16,6 +35,7 @@ export function hashStr(s: string): number {
   return Math.abs(h);
 }
 
+/** Build a stable `Metrics` object from an area name. */
 export function metricsFor(name: string): Metrics {
   const h = hashStr(name);
   return {
@@ -26,7 +46,10 @@ export function metricsFor(name: string): Metrics {
   };
 }
 
-// Beam height as a function of "value" (4..18 scene units)
+/**
+ * Map a `metrics.value` (~100..999) to a beam height in scene units (4..18).
+ * Used by `<Beam>` and the picking/highlight code.
+ */
 export function beamHeight(value: number): number {
-  return 4 + (value / 1000) * 14;
+  return CONFIG.beam.minHeight + (value / 1000) * CONFIG.beam.scaleByValue;
 }

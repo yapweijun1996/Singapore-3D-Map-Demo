@@ -6,11 +6,11 @@ How the GeoJSON files in `data/` are produced.
 
 All boundary data comes from [data.gov.sg](https://data.gov.sg/), URA Master Plan 2019 (No Sea) series:
 
-| Dataset         | data.gov.sg ID                            | Features (raw) |
-| --------------- | ----------------------------------------- | -------------- |
-| `regions`       | `d_bf4d24df9129d5a8ff8cf82e20959ee0`      | 5              |
-| `planning-areas`| `d_4765db0e87b9c86336792efe8a1f7a66`      | 55             |
-| `subzones`      | `d_8594ae9ff96d0c708bc2af633048edfb`      | ~330           |
+| Dataset          | data.gov.sg ID                       | Features (raw) |
+| ---------------- | ------------------------------------ | -------------- |
+| `regions`        | `d_bf4d24df9129d5a8ff8cf82e20959ee0` | 5              |
+| `planning-areas` | `d_4765db0e87b9c86336792efe8a1f7a66` | 55             |
+| `subzones`       | `d_8594ae9ff96d0c708bc2af633048edfb` | ~330           |
 
 These IDs are pinned to the 2019 vintage. A future URA update ships under new IDs — search data.gov.sg manually and update `scripts/download_sg_geojson.py`.
 
@@ -71,11 +71,11 @@ data/sg-{name}.geojson  ← what the demo reads
 
 ## Sizes
 
-| File                              | Raw      | Simplified | Reduction |
-| --------------------------------- | -------- | ---------- | --------- |
-| `sg-regions.geojson`              | 1.2 MB   | 38 KB      | ~31x      |
-| `sg-planning-areas.geojson`       | 1.7 MB   | 66 KB      | ~26x      |
-| `sg-subzones.geojson`             | 2.5 MB   | 164 KB     | ~15x      |
+| File                        | Raw    | Simplified | Reduction |
+| --------------------------- | ------ | ---------- | --------- |
+| `sg-regions.geojson`        | 1.2 MB | 38 KB      | ~31x      |
+| `sg-planning-areas.geojson` | 1.7 MB | 66 KB      | ~26x      |
+| `sg-subzones.geojson`       | 2.5 MB | 164 KB     | ~15x      |
 
 ## Reliability features
 
@@ -87,6 +87,7 @@ data/sg-{name}.geojson  ← what the demo reads
 ## Known sharp edges
 
 See `task.md` → "Data tooling" for the punch list, including:
+
 - PENDING and network errors share one retry budget; busy days can exhaust it.
 - Micro-polygon filter only runs for `MultiPolygon` results.
 - No `make_valid` / `buffer(0)` repair step on input geometry.

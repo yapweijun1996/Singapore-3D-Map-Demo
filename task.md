@@ -26,6 +26,7 @@ Originally planned as a vanilla-JS split of `sample.html`. **Superseded** by the
 - [x] **T1.6** Globals replaced with `useState` in `src/App.tsx`.
 
 Also done as part of T1:
+
 - [x] Three-layer switcher (Regions / Areas / Subzones).
 - [x] `<InfoCard>` shows a "Demo data" pill.
 - [x] `Escape` closes the info card.
@@ -51,13 +52,13 @@ Also done as part of T1:
 - [ ] **T3.1** Central `src/config.ts` collecting magic constants currently sprinkled across `Floor.tsx`, `Particles.tsx`, `RippleRings.tsx`, `Beam.tsx`, `MapScene.tsx`:
   ```ts
   export const config = {
-    proj:       { center: [103.85, 1.35], scale: 200 },
-    extrude:    { depth: 1.8 },
-    camera:     { fov: 38, position: [0, 105, 135], minDist: 40, maxDist: 260 },
-    bloom:      { intensity: 0.35, threshold: 0.85, smoothing: 0.5 },
-    particles:  { count: 250, rMin: 30, rMax: 110 },
-    ripple:     { count: 3, baseRadius: 20, speed: 0.18 },
-    beam:       { minH: 4, scale: 14, segments: 6 },
+    proj: { center: [103.85, 1.35], scale: 200 },
+    extrude: { depth: 1.8 },
+    camera: { fov: 38, position: [0, 105, 135], minDist: 40, maxDist: 260 },
+    bloom: { intensity: 0.35, threshold: 0.85, smoothing: 0.5 },
+    particles: { count: 250, rMin: 30, rMax: 110 },
+    ripple: { count: 3, baseRadius: 20, speed: 0.18 },
+    beam: { minH: 4, scale: 14, segments: 6 },
   } as const;
   ```
 - [ ] **T3.4** JSDoc/TS-doc on the `AreaModel`/`Metrics`/`Layer` types in `src/lib/geojson.ts`.
@@ -108,18 +109,18 @@ Findings from a top-to-bottom layout review. Each item carries its **observation
 
 ### Priority A — current obvious gaps
 
-- [ ] **UI-A1** **Layout breaks on narrow viewports** (everything uses fixed 48 px inset). At ≤640 px the LayerSwitcher (top-right) collides with Hero (top-center); Counter overlaps Controls. → Add breakpoints ≤768 / ≤480; change insets to `clamp(16px, 4vw, 48px)`; on narrow widths move LayerSwitcher into a sticky top bar, shrink Hero to ~36 px, hide Hint. *Trade-off:* ~30 lines of CSS; without it mobile is unusable.
+- [ ] **UI-A1** **Layout breaks on narrow viewports** (everything uses fixed 48 px inset). At ≤640 px the LayerSwitcher (top-right) collides with Hero (top-center); Counter overlaps Controls. → Add breakpoints ≤768 / ≤480; change insets to `clamp(16px, 4vw, 48px)`; on narrow widths move LayerSwitcher into a sticky top bar, shrink Hero to ~36 px, hide Hint. _Trade-off:_ ~30 lines of CSS; without it mobile is unusable.
 - [ ] **UI-A2** **Right corner is crowded and InfoCard overlaps LayerSwitcher**. FpsBadge (top:16) + LayerSwitcher (top:56) + InfoCard sliding in from right all compete in one zone. → Two options:
   - **(a)** Move FpsBadge to bottom-left (group with Hint as "session info"); LayerSwitcher stays.
   - **(b)** Convert LayerSwitcher into a top-center segmented control next to the Hero meta — frees right side entirely for the card.
-  *Trade-off:* (a) is 5 min and conservative; (b) ~30 min and more modern.
-- [ ] **UI-A3** **No `:focus-visible` styles**. Tab navigation has no visible focus ring. → Global `:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }`; extract `--accent` as a real theme token. *Trade-off:* ~10 lines CSS; a11y blocker fix.
-- [ ] **UI-A4** **Bottom toggle bar has no hierarchy**. Pillars / Tags affect data perception; Ripple / Atmosphere are pure ambiance. → Split into two groups with a 1px `var(--text-4)` divider: `[Pillars][Tags] · [Ripple][Atmosphere]`. *Trade-off:* 5 min; instant clarity gain.
-- [ ] **UI-A5** **Hint shows mouse-only verbs on touch**. "Click / Drag / Scroll" don't apply to touch. → `@media (hover: none) { … }` swap to Tap / Pan / Pinch, or hide on touch entirely. See also `T4.5` (touch tap select). *Trade-off:* 1 min.
+    _Trade-off:_ (a) is 5 min and conservative; (b) ~30 min and more modern.
+- [ ] **UI-A3** **No `:focus-visible` styles**. Tab navigation has no visible focus ring. → Global `:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }`; extract `--accent` as a real theme token. _Trade-off:_ ~10 lines CSS; a11y blocker fix.
+- [ ] **UI-A4** **Bottom toggle bar has no hierarchy**. Pillars / Tags affect data perception; Ripple / Atmosphere are pure ambiance. → Split into two groups with a 1px `var(--text-4)` divider: `[Pillars][Tags] · [Ripple][Atmosphere]`. _Trade-off:_ 5 min; instant clarity gain.
+- [ ] **UI-A5** **Hint shows mouse-only verbs on touch**. "Click / Drag / Scroll" don't apply to touch. → `@media (hover: none) { … }` swap to Tap / Pan / Pinch, or hide on touch entirely. See also `T4.5` (touch tap select). _Trade-off:_ 1 min.
 
 ### Priority B — refinements
 
-- [ ] **UI-B1** "Demo data" pill is only visible *after* clicking an area. → Surface globally in the Hero meta line as `Planning Areas · URA Master Plan · Demo data`. Extends existing `T4.3`.
+- [ ] **UI-B1** "Demo data" pill is only visible _after_ clicking an area. → Surface globally in the Hero meta line as `Planning Areas · URA Master Plan · Demo data`. Extends existing `T4.3`.
 - [ ] **UI-B2** Card close button touch target is 28 × 28. → Keep visual size but pad to 44 × 44 hit area. WCAG 2.5.5 (target size) compliance.
 - [ ] **UI-B3** **Selected state is lost when the card closes** — user clicks Bishan, scrolls camera, closes card, forgets what was selected. → Persistent bottom breadcrumb `Currently viewing: Bishan ✕`; only the ✕ truly deselects; clicking the breadcrumb reopens the card.
 - [ ] **UI-B4** **Subzones (330) tag overlap**. → Add a "Tag mode" toggle: All / Hover only / Off. Same as existing `T4.2` (hover-only mode). Faster path: just add the hover-only variant.
@@ -153,7 +154,7 @@ Independent of the React work. Each item is small.
 
 - [ ] **D1** Separate retry budgets for PENDING vs `RequestException`. Today they share `attempt`, so a single network blip can starve the PENDING budget. Suggested: `pending_retries=15`, `error_retries=8`, each with own counter.
 - [ ] **D2** Exp-backoff PENDING too (cap at ~60 s); current fixed 2 s × 8 = 16 s ceiling is too tight for first-time generation on big datasets.
-- [ ] **D3** Run micro-polygon filter on `Polygon` results too. And when *all* sub-polygons fall below the 1e-7 threshold, prefer "keep the largest" over the current "restore everything" fallback.
+- [ ] **D3** Run micro-polygon filter on `Polygon` results too. And when _all_ sub-polygons fall below the 1e-7 threshold, prefer "keep the largest" over the current "restore everything" fallback.
 - [ ] **D4** `make_valid` (or `buffer(0)`) repair pass before simplification.
 - [ ] **D5** CLI flags: `--dataset {name}`, `--force`, `--tolerance`, `--output-dir`.
 - [ ] **D6** Auto-promote on success: copy `output/sg-*.geojson` → `data/` + `public/data/` behind a `--promote` flag.

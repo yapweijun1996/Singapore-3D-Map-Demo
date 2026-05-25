@@ -35,17 +35,17 @@ scene
 
 ## Materials
 
-| Mesh                  | Material                                                         |
-| --------------------- | ---------------------------------------------------------------- |
-| Side walls (extrude)  | `ShaderMaterial` — vertical gradient `uColorBottom → uColorTop`  |
-| Top face              | `MeshPhongMaterial` (one per area, so highlight can mutate it)   |
-| Edge line             | `LineBasicMaterial`                                              |
-| Floor                 | `ShaderMaterial` — radial fade                                   |
-| Beam cylinder         | `ShaderMaterial` — vertical fade, additive blending              |
-| Beam dot              | `MeshBasicMaterial` (top of beam)                                |
-| Beam halo             | `MeshBasicMaterial` — additive, animated opacity                 |
-| Particles             | `PointsMaterial` — additive, no depthWrite                       |
-| Ripple rings          | `MeshBasicMaterial` — double-sided, transparent                  |
+| Mesh                 | Material                                                        |
+| -------------------- | --------------------------------------------------------------- |
+| Side walls (extrude) | `ShaderMaterial` — vertical gradient `uColorBottom → uColorTop` |
+| Top face             | `MeshPhongMaterial` (one per area, so highlight can mutate it)  |
+| Edge line            | `LineBasicMaterial`                                             |
+| Floor                | `ShaderMaterial` — radial fade                                  |
+| Beam cylinder        | `ShaderMaterial` — vertical fade, additive blending             |
+| Beam dot             | `MeshBasicMaterial` (top of beam)                               |
+| Beam halo            | `MeshBasicMaterial` — additive, animated opacity                |
+| Particles            | `PointsMaterial` — additive, no depthWrite                      |
+| Ripple rings         | `MeshBasicMaterial` — double-sided, transparent                 |
 
 > A separate `topMat` is created per area (`createTopMaterial()`) specifically so the hover/click highlight can mutate that one area's emissive color without affecting the others. Side material is shared across all 55.
 
@@ -53,13 +53,13 @@ scene
 
 `animate()` runs each frame:
 
-| Subject     | Update                                                                                   |
-| ----------- | ---------------------------------------------------------------------------------------- |
-| Ripples     | Each ring's `phase = ((t*0.18 + ring.userData.phase) % 1)`; scale = `1 + phase*5`        |
-| Particles   | Drift on Z, wrap when out of range                                                       |
-| Beam halos  | Scale + opacity pulse using `sin(t * 1.3 + i * 0.27)`                                    |
-| Shader time | `mapUf.uTime.value = t` (currently unused by shaders, plumbed for future)                |
-| Render      | `composer.render()` then `css2DRenderer.render(scene, camera)`                           |
+| Subject     | Update                                                                            |
+| ----------- | --------------------------------------------------------------------------------- |
+| Ripples     | Each ring's `phase = ((t*0.18 + ring.userData.phase) % 1)`; scale = `1 + phase*5` |
+| Particles   | Drift on Z, wrap when out of range                                                |
+| Beam halos  | Scale + opacity pulse using `sin(t * 1.3 + i * 0.27)`                             |
+| Shader time | `mapUf.uTime.value = t` (currently unused by shaders, plumbed for future)         |
+| Render      | `composer.render()` then `css2DRenderer.render(scene, camera)`                    |
 
 The loop runs unconditionally — no `document.visibilityState` pause, no FPS cap.
 
@@ -67,10 +67,14 @@ The loop runs unconditionally — no `document.visibilityState` pause, no FPS ca
 
 ```js
 window.addEventListener('resize', () => {
-  W = window.innerWidth; H = window.innerHeight;
-  camera.aspect = W / H; camera.updateProjectionMatrix();
-  renderer.setSize(W, H); css2DRenderer.setSize(W, H);
-  composer.setSize(W, H); bloomPass.setSize(W, H);
+  W = window.innerWidth;
+  H = window.innerHeight;
+  camera.aspect = W / H;
+  camera.updateProjectionMatrix();
+  renderer.setSize(W, H);
+  css2DRenderer.setSize(W, H);
+  composer.setSize(W, H);
+  bloomPass.setSize(W, H);
 });
 ```
 

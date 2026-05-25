@@ -1,0 +1,8 @@
+dist/
+node_modules/
+output/
+public/data/
+data/
+*.geojson
+package-lock.json
+sample.html

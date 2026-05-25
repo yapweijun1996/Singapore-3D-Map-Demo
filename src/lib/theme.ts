@@ -16,9 +16,9 @@ function oklchToHex(L: number, C: number, H: number): number {
   const m = m_ * m_ * m_;
   const s = s_ * s_ * s_;
 
-  let rLin = 4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s;
-  let gLin = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s;
-  let bLin = -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s;
+  const rLin = 4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s;
+  const gLin = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s;
+  const bLin = -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s;
 
   const toGamma = (v: number): number =>
     v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055;
@@ -84,45 +84,45 @@ interface ThreeTokens {
 // amber accent (selection/beam). Opposite-hue accent gives instant recognition.
 const DARK: Record<string, Oklch> = {
   sceneBg: [0.085, 0.015, 230], // deep teal-navy water
-  floor: [0.135, 0.025, 225],   // visible above bg, hint of chroma
+  floor: [0.135, 0.025, 225], // visible above bg, hint of chroma
 
-  keyLight: [0.96, 0.05, 80],   // warm key (gold)
+  keyLight: [0.96, 0.05, 80], // warm key (gold)
   fillLight: [0.55, 0.07, 240], // cool fill (blue)
 
-  areaTop: [0.42, 0.04, 225],   // mid-luminance teal land — Δ 0.29 vs floor
+  areaTop: [0.42, 0.04, 225], // mid-luminance teal land — Δ 0.29 vs floor
   areaTopSel: [0.78, 0.16, 70], // warm amber — opposite hue family, jumps out
   areaEmissive: [0, 0, 0],
   areaEmissiveSel: [0.5, 0.14, 65], // amber glow boost on selection
 
-  areaLine: [0.62, 0.06, 218],  // teal line, cohesive with bg family
+  areaLine: [0.62, 0.06, 218], // teal line, cohesive with bg family
 
-  beam: [0.96, 0.08, 75],       // warm-white pillar (high L → bloom)
-  halo: [0.82, 0.18, 70],       // amber halo, signature color
-  particle: [0.82, 0.08, 218],  // cool blue atmospheric dust
-  ripple: [0.95, 0.10, 75],     // warm white ripple, matches beam family
+  beam: [0.96, 0.08, 75], // warm-white pillar (high L → bloom)
+  halo: [0.82, 0.18, 70], // amber halo, signature color
+  particle: [0.82, 0.08, 218], // cool blue atmospheric dust
+  ripple: [0.95, 0.1, 75], // warm white ripple, matches beam family
 };
 
 // ─── "Paper Atlas" — light theme ─────────────────────────────────────────────
 // Concept: a refined map print. Warm cream paper, cool oceanic blue accent.
 // Selection uses LOWER luminance (paper convention: highlighted = "inked").
 const LIGHT: Record<string, Oklch> = {
-  sceneBg: [0.965, 0.012, 85],  // warm cream paper
-  floor: [0.91, 0.014, 240],    // subtle cool tint underneath, hints at water
+  sceneBg: [0.965, 0.012, 85], // warm cream paper
+  floor: [0.91, 0.014, 240], // subtle cool tint underneath, hints at water
 
-  keyLight: [0.97, 0.025, 80],  // warm key, soft
+  keyLight: [0.97, 0.025, 80], // warm key, soft
   fillLight: [0.75, 0.05, 240], // cool fill, gentle
 
-  areaTop: [0.86, 0.025, 78],   // paper-warm land tile
-  areaTopSel: [0.48, 0.14, 235],// deep oceanic blue — "inked" selection
+  areaTop: [0.86, 0.025, 78], // paper-warm land tile
+  areaTopSel: [0.48, 0.14, 235], // deep oceanic blue — "inked" selection
   areaEmissive: [0, 0, 0],
-  areaEmissiveSel: [0, 0, 0],   // ZERO — Phong emissive ADDS light, would
-                                // wash out the deliberate dark-selected color
-  areaLine: [0.55, 0.04, 75],   // warm gray, calligraphic
+  areaEmissiveSel: [0, 0, 0], // ZERO — Phong emissive ADDS light, would
+  // wash out the deliberate dark-selected color
+  areaLine: [0.55, 0.04, 75], // warm gray, calligraphic
 
-  beam: [0.50, 0.20, 245],      // saturated brand blue (high chroma → bloom)
-  halo: [0.60, 0.18, 240],
-  particle: [0.50, 0.06, 75],   // warm gray dust
-  ripple: [0.48, 0.14, 235],    // brand blue ripple, matches selection family
+  beam: [0.5, 0.2, 245], // saturated brand blue (high chroma → bloom)
+  halo: [0.6, 0.18, 240],
+  particle: [0.5, 0.06, 75], // warm gray dust
+  ripple: [0.48, 0.14, 235], // brand blue ripple, matches selection family
 };
 
 function resolveTokens(t: Record<string, Oklch>, isLight: boolean): ThreeTokens {
@@ -200,9 +200,7 @@ export function useTheme(): {
   cycle: () => void;
 } {
   const [pref, setPref] = useState<ThemePref>(readStoredPref);
-  const [sysIsLight, setSysIsLight] = useState<boolean>(
-    () => systemTheme() === 'light',
-  );
+  const [sysIsLight, setSysIsLight] = useState<boolean>(() => systemTheme() === 'light');
 
   // Sync with system pref + write attribute/localStorage
   useEffect(() => {
@@ -218,8 +216,7 @@ export function useTheme(): {
     return () => mq.removeEventListener('change', onChange);
   }, []);
 
-  const resolved: ResolvedTheme =
-    pref === 'auto' ? (sysIsLight ? 'light' : 'dark') : pref;
+  const resolved: ResolvedTheme = pref === 'auto' ? (sysIsLight ? 'light' : 'dark') : pref;
 
   const cycle = useCallback(() => {
     setPref((p) => (p === 'auto' ? 'dark' : p === 'dark' ? 'light' : 'auto'));
