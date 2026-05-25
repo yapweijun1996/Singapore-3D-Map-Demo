@@ -108,4 +108,6 @@ Demo-quality. The four numbers in the info card (**Visitor Flow / Capacity / Tra
 
 ## License
 
-No license declared yet.
+[MIT](LICENSE) © 2026 YAP WEI JUN.
+
+Boundary data is © Urban Redevelopment Authority of Singapore (URA Master Plan 2019), redistributed under the [Singapore Open Data License](https://data.gov.sg/open-data-licence). Fonts are © Vercel (Geist) and Instrument (Instrument Serif), both under the SIL Open Font License 1.1.
